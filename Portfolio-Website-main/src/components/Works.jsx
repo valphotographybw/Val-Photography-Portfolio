@@ -34,12 +34,11 @@ const Works = () => (
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {gallery.photos.map((photo, photoIndex) => (
-              <motion.a
+              <a
                 key={`${gallery.id}-${photoIndex}`}
                 href={photo.src}
                 target="_blank"
                 rel="noreferrer"
-                variants={fadeIn("up", "spring", photoIndex * 0.08, 0.5)}
                 className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5"
                 aria-label={`Open full-size photo: ${photo.alt}`}
               >
@@ -53,7 +52,7 @@ const Works = () => (
                 <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
                   {gallery.title} · 0{photoIndex + 1}
                 </span>
-              </motion.a>
+              </a>
             ))}
           </div>
         </section>
