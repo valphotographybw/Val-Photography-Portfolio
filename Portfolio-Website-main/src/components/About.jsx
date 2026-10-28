@@ -1,61 +1,52 @@
-import { motion } from 'framer-motion';
-import React from 'react';
-import { Tilt } from 'react-tilt';
-import { services } from '../constants';
-import { SectionWrapper } from '../hoc';
-import { styles } from '../styles';
-import { fadeIn, textVariant } from '../utils/motion';
+import { motion } from "framer-motion";
+import { serviceGalleries } from "../constants";
+import { SectionWrapper } from "../hoc";
+import { styles } from "../styles";
+import { fadeIn, textVariant } from "../utils/motion";
 
-const ServiceCard = ({ index, title, icon }) => (
-  <Tilt className="xs:w-[250px] w-full">
-    <motion.div
-      variants={fadeIn('right', 'spring', index * 0.5, 0.75)}
-      className="w-full green-pink-gradient p-[1px] rounded-[20px] shadow-card"
-    >
-      <div
-        options={{
-          max: 45,
-          scale: 1,
-          speed: 450,
-        }}
-        className="bg-tertiary rounded-[20px] py-5 px-12 min-h-[280px] flex justify-evenly items-center flex-col"
-      >
-        <img src={icon} alt="web-development" className="w-16 h-16 object-contain" loading="lazy" />
-
-        <h3 className="text-white text-[20px] font-bold text-center">{title}</h3>
-      </div>
+const About = () => (
+  <>
+    <motion.div variants={textVariant()}>
+      <p className={styles.sectionSubText}>Val Photography · Botswana</p>
+      <h2 className={styles.sectionHeadText}>The moments that matter.</h2>
     </motion.div>
-  </Tilt>
-);
 
-const About = () => {
-  return (
-    <>
-      <motion.div variants={textVariant()}>
-        <p className={styles.sectionSubText}>Introduction</p>
-        <h2 className={styles.sectionHeadText}>Overview</h2>
-      </motion.div>
+    <motion.p
+      variants={fadeIn("", "", 0.1, 1)}
+      className="mt-5 max-w-3xl text-[17px] leading-8 text-secondary"
+    >
+      Val Photography captures people, milestones, and celebrations across
+      Botswana. From a relaxed portrait session to the energy of a wedding or
+      event, every gallery is made to help you keep the moments you love.
+    </motion.p>
 
-      <motion.p
-        variants={fadeIn('', '', 0.1, 1)}
-        className="mt-4 text-secondary text-[17px] max-w-3xl leading-[30px]"
-      >
-        I am a Computer Science student at SRM University and multilingual speaker with a passion
-        for ethical hacking, artificial intelligence, and neural language processing. I am looking
-        to join a company that values innovation, collaboration, and continuous learning and am
-        confident that my enthusiasm and drive will help me succeed in any role that leverages my
-        passion for technology.
-      </motion.p>
-
-      <div className="mt-20 flex flex-wrap gap-10">
-        {services.map((service, index) => (
-          <ServiceCard key={service.title} index={index} {...service} />
+    <div id="services" className="scroll-mt-24 pt-16">
+      <p className="text-sm font-semibold uppercase tracking-[0.25em] text-amber-300">
+        Photography services
+      </p>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {serviceGalleries.map((service, index) => (
+          <motion.a
+            key={service.id}
+            href={`#${service.id}`}
+            variants={fadeIn("up", "spring", index * 0.08, 0.5)}
+            className="group rounded-2xl border border-white/10 bg-white/[0.03] p-6 transition hover:border-amber-200/50 hover:bg-white/[0.06]"
+          >
+            <span className="text-xs font-medium uppercase tracking-[0.2em] text-secondary">
+              0{index + 1}
+            </span>
+            <h3 className="mt-4 text-2xl font-semibold text-white group-hover:text-amber-200">
+              {service.title}
+            </h3>
+            <p className="mt-2 leading-7 text-secondary">{service.description}</p>
+            <span className="mt-5 inline-block text-sm font-medium text-amber-300">
+              View gallery <span aria-hidden="true">→</span>
+            </span>
+          </motion.a>
         ))}
       </div>
-    </>
-  );
-};
+    </div>
+  </>
+);
 
-const WrappedAbout = SectionWrapper(About, 'about');
-
-export default WrappedAbout;
+export default SectionWrapper(About, "about");

@@ -1,170 +1,92 @@
-import {
-  c,
-  python,
-  java,
-  cpp,
-  javascript,
-  html,
-  css,
-  reactjs,
-  tailwind,
-  nodejs,
-  git,
-  edunet,
-  weatherpedia,
-  termpw,
-  payloadmaster,
-  threejs,
-  mhft,
-  sketcher,
-  mathwork,
-  CompileVortex,
-  eduskill,
-} from "../assets";
+const photo = (id, width = 900) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
+
+const localGalleryPhotos = import.meta.glob(
+  "../assets/gallery/*/*.{avif,jpg,jpeg,png,webp}",
+  { eager: true, import: "default" }
+);
+
+const photosForGallery = (galleryId, samplePhotos) => {
+  const folder = `/gallery/${galleryId}/`;
+  const photos = Object.entries(localGalleryPhotos)
+    .filter(([path]) => path.includes(folder))
+    .map(([path, src]) => {
+      const filename = path.split("/").pop().replace(/\.[^.]+$/, "");
+      return {
+        src,
+        alt: filename.replace(/[-_]+/g, " "),
+      };
+    });
+
+  return photos.length > 0 ? photos : samplePhotos;
+};
 
 export const navLinks = [
-  {
-    id: "about",
-    title: "About",
-  },
-  {
-    id: "work",
-    title: "Work",
-  },
-  {
-    id: "contact",
-    title: "Contact",
-  },
+  { id: "about", title: "About" },
+  { id: "services", title: "Services" },
+  { id: "gallery", title: "Gallery" },
+  { id: "contact", title: "Contact" },
 ];
 
-export const services = [
-  { title: "C", icon: c },
-  { title: "C++", icon: cpp },
-  { title: "Python", icon: python },
-  { title: "Java", icon: java },
-];
-
-export const technologies = [
-  { name: "HTML 5", icon: html },
-  { name: "CSS 3", icon: css },
-  { name: "JavaScript", icon: javascript },
-  { name: "Rect JS", icon: reactjs },
-  { name: "Tailwind CSS", icon: tailwind },
-  { name: "Node JS", icon: nodejs },
-  { name: "Three JS", icon: threejs },
-  { name: "git", icon: git },
-];
-
-export const experiences = [
+export const serviceGalleries = [
   {
-    title: "AI/ML Intern",
-    company_name: "EduSkill Foundation | AWS Academy | AICTE",
-    icon: eduskill,
-    iconBg: "#161329",
-    date: "Sep 2023 - Nov 2023",
-    points: [
-      "Acquired hands-on knowledge of AWS Cloud Foundation, delving into cloud infrastructure, services, and deployment.",
-      "also gaining a solid foundation in Machine Learning, covering topics like algorithms, data analysis, and model building.",
-    ],
+    id: "portraits",
+    title: "Portraits",
+    description: "Personal portraits that let your personality shine.",
+    photos: photosForGallery("portraits", [
+      { src: photo("photo-1534528741775-53994a69daeb"), alt: "Portrait in soft natural light" },
+      { src: photo("photo-1506794778202-cad84cf45f1d"), alt: "Outdoor portrait session" },
+      { src: photo("photo-1531123897727-8f129e1688ce"), alt: "Creative fashion portrait" },
+    ]),
   },
   {
-    title: "Mathwork Ai Virtual Intern",
-    company_name: "Mathwork | AICTE",
-    icon: mathwork,
-    iconBg: "#161329",
-    date: "May 2023 - Sep 2023",
-    points: [
-      "Completed virtual internship, gaining a strong foundation in MATLAB, including data analysis and processing.",
-      "Acquired practical skills in image and signal processing, including segmentation, batch processing, and spectral analysis.",
-      "Developed expertise in machine learning models for clustering, classification, and regression, and customized deep learning techniques for image classification.",
-    ],
+    id: "studio",
+    title: "Studio",
+    description: "Polished studio sessions with considered lighting and style.",
+    photos: photosForGallery("studio", [
+      { src: photo("photo-1544005313-94ddf0286df2"), alt: "Studio beauty portrait" },
+      { src: photo("photo-1500648767791-00dcc994a43e"), alt: "Classic studio headshot" },
+      { src: photo("photo-1534528741775-53994a69daeb"), alt: "Studio portrait with a warm backdrop" },
+    ]),
   },
   {
-    title: "Artificial Intelligence Intern",
-    company_name: "Edunet Foundation | IBM SkillsBuild | AICTE",
-    icon: edunet,
-    iconBg: "#161329",
-    date: "June 2023 - July 2023",
-    points: [
-      "Engineered a comprehensive Mental Health Fitness Tracker ML model utilizing Python and scikit-learn.",
-      "Maximized the model's performance by refining model parameters and employing ensemble methods, yielding an outstanding accuracy percentage of 98.50%.",
-      "Leveraged 12 regression algorithms to attain precise outcomes in analyzing and predicting mental fitness levels across 150+ countries.",
-    ],
-  },
-];
-
-export const projects = [
-  {
-    name: "WeatherPedia",
-    description:
-      "Web-based platform that allows users to access weather information for their location by entering it in the search field",
-    tags: [
-      { name: "Javascript", color: "blue-text-gradient" },
-      { name: "HTML", color: "green-text-gradient" },
-      { name: "bootstrap 5.3.0", color: "pink-text-gradient" },
-      { name: "Weather API by API Ninjas", color: "yellow-text-gradient" },
-    ],
-    image: weatherpedia,
-    source_code_link: "https://github.com/lohitkolluri/WeatherPedia",
+    id: "birthdays",
+    title: "Birthdays",
+    description: "Bright, joyful photographs of the people and moments you celebrate.",
+    photos: photosForGallery("birthdays", [
+      { src: photo("photo-1530103862676-de8c9debad1d"), alt: "Colorful birthday celebration" },
+      { src: photo("photo-1464366400600-7168b8af9bc3"), alt: "Birthday cake and celebration details" },
+      { src: photo("photo-1513151233558-d860c5398176"), alt: "Festive birthday party decorations" },
+    ]),
   },
   {
-    name: "Terminal Like Portfolio Website",
-    description:
-      "A terminal themed portfolio website that allows users to type into the terminal and use commands like a real terminal.",
-    tags: [
-      { name: "HTML", color: "blue-text-gradient" },
-      { name: "css", color: "green-text-gradient" },
-      { name: "Javascript", color: "pink-text-gradient" },
-    ],
-    image: termpw,
-    source_code_link: "https://github.com/lohitkolluri/lohitkolluri.github.io",
+    id: "events",
+    title: "Events",
+    description: "Candid coverage of the atmosphere, details, and people at your event.",
+    photos: photosForGallery("events", [
+      { src: photo("photo-1511795409834-ef04bbd61622"), alt: "Guests gathered at an event" },
+      { src: photo("photo-1511578314322-379afb476865"), alt: "Live event and audience" },
+      { src: photo("photo-1470229722913-7c0e2dbbafd3"), alt: "Stage lights at a live event" },
+    ]),
   },
   {
-    name: "Mental Health Fitness Tracker",
-    description:
-      "ML model that utilizes regression techniques to provide insights into mental health and make predictions based on the available data.",
-    tags: [
-      { name: "Machine Learning", color: "blue-text-gradient" },
-      { name: "Jupyter Notebook", color: "green-text-gradient" },
-      { name: "Regression Algorithms", color: "pink-text-gradient" },
-    ],
-    image: mhft,
-    source_code_link:
-      "https://github.com/lohitkolluri/mental_health_fitness_tracker",
+    id: "weddings",
+    title: "Weddings",
+    description: "Meaningful moments and details from your wedding day, captured with care.",
+    photos: photosForGallery("weddings", [
+      { src: photo("photo-1519741497674-611481863552"), alt: "Wedding celebration outdoors" },
+      { src: photo("photo-1537633552985-df8429e8048b"), alt: "Newlyweds celebrating together" },
+      { src: photo("photo-1511285560929-80b456fea0bc"), alt: "Wedding couple sharing a joyful moment" },
+    ]),
   },
   {
-    name: "PayloadMaster",
-    description:
-      "Tool to automate payload creation using the Metasploit framework",
-    tags: [
-      { name: "shell", color: "blue-text-gradient" },
-    ],
-    image: payloadmaster,
-    source_code_link: "https://github.com/lohitkolluri/PayloadMaster",
-  },
-  {
-    name: "CompileVortex",
-    description:
-      "Tool to automate payload creation using the Metasploit framework",
-    tags: [
-      { name: "Javascript", color: "blue-text-gradient" },
-      { name: "CSS", color: "green-text-gradient" },
-      { name: "HTML", color: "pink-text-gradient" },
-    ],
-    image: CompileVortex,
-    source_code_link: "https://github.com/lohitkolluri/CompileVortex",
-  },
-  {
-    name: "Sketcher",
-    description:
-      "Convert an input image to a pencil sketch using OpenCV and Matplotlib libraries.",
-    tags: [
-      { name: "OpenCV", color: "blue-text-gradient" },
-      { name: "Matplotlib", color: "green-text-gradient" },
-      { name: "Python", color: "pink-text-gradient" },
-    ],
-
-    image: sketcher,
-    source_code_link: "https://github.com/lohitkolluri/Image_to_Pencil_Sketch_App",
+    id: "graduations",
+    title: "Graduations",
+    description: "Celebrate your hard work with portraits and memories to keep.",
+    photos: photosForGallery("graduations", [
+      { src: photo("photo-1627556704302-624286467c65"), alt: "Graduate celebrating in cap and gown" },
+      { src: photo("photo-1523580494863-6f3031224c94"), alt: "Graduation ceremony and caps" },
+      { src: photo("photo-1523240795612-9a054b0db644"), alt: "Friends celebrating a graduation" },
+    ]),
   },
 ];

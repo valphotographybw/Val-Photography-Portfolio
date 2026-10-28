@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "predeploy": "npm --prefix Portfolio-Website-main run build",
+    "deploy": "gh-pages -d Portfolio-Website-main/dist"
+  },
   "devDependencies": {
     "gh-pages": "^6.3.0"
   }

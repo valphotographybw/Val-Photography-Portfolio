@@ -1,76 +1,65 @@
-import React from "react";
-import { Tilt } from "react-tilt";
 import { motion } from "framer-motion";
-
-import { styles } from "../styles";
-import { github } from "../assets";
+import { serviceGalleries } from "../constants";
 import { SectionWrapper } from "../hoc";
-import { projects } from "../constants";
+import { styles } from "../styles";
 import { fadeIn, textVariant } from "../utils/motion";
 
-const ProjectCard = ({ name, description, tags, image, source_code_link }) => {
-  return (
-    <motion.div variants={fadeIn("up", "spring")}>
-      <Tilt
-        options={{
-          max: 45,
-          scale: 1,
-          speed: 450,
-        }}
-        className="bg-tertiary p-5 rounded-2xl sm:w-[360px] w-full"
-      >
-        <div className="relative w-full h-[230px]">
-          <img
-            src={image}
-            alt="project_image"
-            className="w-full h-full object-cover rounded-2xl"
-          />
-          <div className="absolute inset-0 flex justify-end m-3 card-img_hover">
-            <div
-              onClick={() => window.open(source_code_link, "_blank")}
-              className="black-gradient w-10 h-10 rounded-full flex justify-center items-center cursor-pointer"
-            >
-              <img src={github} alt="source code" className="w-1/2 h-1/2 object-contain" />
-            </div>
-          </div>
-        </div>
-        <div className="mt-5">
-          <h3 className="text-white font-bold text-[24px]">{name}</h3>
-          <p className="mt-2 text-secondary text-[14px]">{description}</p>
-        </div>
-        <div className="mt-4 flex flex-wrap gap-2">
-          {tags.map((tag) => (
-            <p key={tag.name} className={`text-[14px] ${tag.color}`}>
-              #{tag.name}
-            </p>
-          ))}
-        </div>
-      </Tilt>
+const Works = () => (
+  <>
+    <motion.div variants={textVariant()}>
+      <p className={styles.sectionSubText}>Selected moments</p>
+      <h2 className={styles.sectionHeadText}>Photography galleries</h2>
     </motion.div>
-  );
-};
+    <motion.p
+      variants={fadeIn("", "", 0.1, 1)}
+      className="mt-5 max-w-3xl text-[17px] leading-8 text-secondary"
+    >
+      Explore the kind of moments Val Photography loves to capture. Each service
+      has its own gallery — get in touch to plan a shoot in Botswana.
+    </motion.p>
 
-const Works = () => {
-  return (
-    <>
-      <motion.div variants={textVariant()}>
-        <p className={`${styles.sectionSubText} `}>My work</p>
-        <h2 className={`${styles.sectionHeadText}`}>Projects</h2>
-      </motion.div>
-      <div className="w-full flex">
-        <motion.p variants={fadeIn("", "", 0.1)} className="mt-3 text-secondary text-[17px] max-w-3xl leading-[30px]">
-          Following projects showcase my skills and experience through examples
-          of my work. Each project is briefly described with links to code
-          repositories in it.
-        </motion.p>
-      </div>
-      <div className="mt-20 flex flex-wrap gap-7">
-        {projects.map((project, index) => (
-          <ProjectCard key={`project-${index}`} {...project} />
-        ))}
-      </div>
-    </>
-  );
-};
+    <div className="mt-14 space-y-20">
+      {serviceGalleries.map((gallery, galleryIndex) => (
+        <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-300">
+                0{galleryIndex + 1} / Photography
+              </p>
+              <h3 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+                {gallery.title}
+              </h3>
+            </div>
+            <p className="max-w-xl leading-7 text-secondary">{gallery.description}</p>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {gallery.photos.map((photo, photoIndex) => (
+              <motion.a
+                key={`${gallery.id}-${photoIndex}`}
+                href={photo.src}
+                target="_blank"
+                rel="noreferrer"
+                variants={fadeIn("up", "spring", photoIndex * 0.08, 0.5)}
+                className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5"
+                aria-label={`Open full-size photo: ${photo.alt}`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.alt}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                />
+                <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
+                <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
+                  {gallery.title} · 0{photoIndex + 1}
+                </span>
+              </motion.a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </>
+);
 
-export default SectionWrapper(Works, "");
+export default SectionWrapper(Works, "gallery");
