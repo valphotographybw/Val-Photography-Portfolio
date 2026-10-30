@@ -22,9 +22,6 @@ const getAdjacentPhoto = (current, direction) => {
 
 const Works = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
-  const [isMobile, setIsMobile] = useState(
-    () => window.matchMedia("(max-width: 639px)").matches
-  );
   const [expandedGalleries, setExpandedGalleries] = useState({});
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
@@ -34,14 +31,6 @@ const Works = () => {
     ? serviceGalleries.find((gallery) => gallery.id === selectedPhoto.galleryId)
     : null;
   const activePhoto = selectedGallery?.photos[selectedPhoto.photoIndex];
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia("(max-width: 639px)");
-    const updateIsMobile = (event) => setIsMobile(event.matches);
-
-    mediaQuery.addEventListener("change", updateIsMobile);
-    return () => mediaQuery.removeEventListener("change", updateIsMobile);
-  }, []);
 
   useEffect(() => {
     if (!selectedGalleryId) return undefined;
@@ -105,10 +94,23 @@ const Works = () => {
       <div className="mt-14 space-y-20">
         {serviceGalleries.map((gallery, galleryIndex) => {
           const isExpanded = expandedGalleries[gallery.id];
-          const visiblePhotos =
-            isMobile && !isExpanded
-              ? gallery.photos.slice(0, 3)
-              : gallery.photos;
+          const previewIndexes = gallery.previewPhotoNumbers
+            ?.map((photoNumber) => photoNumber - 1)
+            .filter(
+              (photoIndex) =>
+                photoIndex >= 0 && photoIndex < gallery.photos.length
+            );
+          const orderedPhotoIndexes = previewIndexes
+            ? [
+                ...previewIndexes,
+                ...gallery.photos
+                  .map((_, photoIndex) => photoIndex)
+                  .filter((photoIndex) => !previewIndexes.includes(photoIndex)),
+              ]
+            : gallery.photos.map((_, photoIndex) => photoIndex);
+          const visiblePhotoIndexes = isExpanded
+            ? orderedPhotoIndexes
+            : orderedPhotoIndexes.slice(0, 3);
 
           return (
             <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
@@ -126,32 +128,36 @@ const Works = () => {
                 </p>
               </div>
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {visiblePhotos.map((photo, photoIndex) => (
-                  <button
-                    key={`${gallery.id}-${photoIndex}`}
-                    type="button"
-                    onClick={(event) => {
-                      triggerRef.current = event.currentTarget;
-                      setSelectedPhoto({ galleryId: gallery.id, photoIndex });
-                    }}
-                    className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 text-left"
-                    aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
-                  >
-                    <img
-                      src={photo.src}
-                      alt={photo.alt}
-                      loading="lazy"
-                      decoding="async"
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                    />
-                    <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
-                    <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
-                      {gallery.title} · 0{photoIndex + 1}
-                    </span>
-                  </button>
-                ))}
+                {visiblePhotoIndexes.map((photoIndex) => {
+                  const photo = gallery.photos[photoIndex];
+
+                  return (
+                    <button
+                      key={`${gallery.id}-${photoIndex}`}
+                      type="button"
+                      onClick={(event) => {
+                        triggerRef.current = event.currentTarget;
+                        setSelectedPhoto({ galleryId: gallery.id, photoIndex });
+                      }}
+                      className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 text-left"
+                      aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
+                    >
+                      <img
+                        src={photo.src}
+                        alt={photo.alt}
+                        loading="lazy"
+                        decoding="async"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                      <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
+                      <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
+                        {gallery.title} · {String(photoIndex + 1).padStart(2, "0")}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
-              {isMobile && !isExpanded && gallery.photos.length > 3 && (
+              {!isExpanded && gallery.photos.length > 3 && (
                 <button
                   type="button"
                   onClick={() =>
