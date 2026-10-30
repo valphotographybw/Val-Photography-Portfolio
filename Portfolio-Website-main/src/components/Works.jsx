@@ -150,9 +150,6 @@ const Works = () => {
                         className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                       />
                       <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
-                      <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
-                        {gallery.title} · {String(photoIndex + 1).padStart(2, "0")}
-                      </span>
                     </button>
                   );
                 })}
@@ -168,7 +165,7 @@ const Works = () => {
                   }
                   className="mt-5 rounded-full border border-white/15 px-5 py-2 text-sm font-medium text-white transition hover:border-amber-200 hover:text-amber-200"
                 >
-                  Show more photos
+                  More
                 </button>
               )}
             </section>
