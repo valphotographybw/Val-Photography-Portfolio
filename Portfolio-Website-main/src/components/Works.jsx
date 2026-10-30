@@ -22,6 +22,10 @@ const getAdjacentPhoto = (current, direction) => {
 
 const Works = () => {
   const [selectedPhoto, setSelectedPhoto] = useState(null);
+  const [isMobile, setIsMobile] = useState(
+    () => window.matchMedia("(max-width: 639px)").matches
+  );
+  const [expandedGalleries, setExpandedGalleries] = useState({});
   const closeButtonRef = useRef(null);
   const dialogRef = useRef(null);
   const triggerRef = useRef(null);
@@ -30,6 +34,14 @@ const Works = () => {
     ? serviceGalleries.find((gallery) => gallery.id === selectedPhoto.galleryId)
     : null;
   const activePhoto = selectedGallery?.photos[selectedPhoto.photoIndex];
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 639px)");
+    const updateIsMobile = (event) => setIsMobile(event.matches);
+
+    mediaQuery.addEventListener("change", updateIsMobile);
+    return () => mediaQuery.removeEventListener("change", updateIsMobile);
+  }, []);
 
   useEffect(() => {
     if (!selectedGalleryId) return undefined;
@@ -91,47 +103,71 @@ const Works = () => {
       </motion.p>
 
       <div className="mt-14 space-y-20">
-        {serviceGalleries.map((gallery, galleryIndex) => (
-          <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
-            <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-300">
-                  0{galleryIndex + 1} / Photography
+        {serviceGalleries.map((gallery, galleryIndex) => {
+          const isExpanded = expandedGalleries[gallery.id];
+          const visiblePhotos =
+            isMobile && !isExpanded
+              ? gallery.photos.slice(0, 3)
+              : gallery.photos;
+
+          return (
+            <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-300">
+                    0{galleryIndex + 1} / Photography
+                  </p>
+                  <h3 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+                    {gallery.title}
+                  </h3>
+                </div>
+                <p className="max-w-xl leading-7 text-secondary">
+                  {gallery.description}
                 </p>
-                <h3 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
-                  {gallery.title}
-                </h3>
               </div>
-              <p className="max-w-xl leading-7 text-secondary">{gallery.description}</p>
-            </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {gallery.photos.map((photo, photoIndex) => (
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {visiblePhotos.map((photo, photoIndex) => (
+                  <button
+                    key={`${gallery.id}-${photoIndex}`}
+                    type="button"
+                    onClick={(event) => {
+                      triggerRef.current = event.currentTarget;
+                      setSelectedPhoto({ galleryId: gallery.id, photoIndex });
+                    }}
+                    className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 text-left"
+                    aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
+                  >
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                    <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
+                    <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
+                      {gallery.title} · 0{photoIndex + 1}
+                    </span>
+                  </button>
+                ))}
+              </div>
+              {isMobile && !isExpanded && gallery.photos.length > 3 && (
                 <button
-                  key={`${gallery.id}-${photoIndex}`}
                   type="button"
-                  onClick={(event) => {
-                    triggerRef.current = event.currentTarget;
-                    setSelectedPhoto({ galleryId: gallery.id, photoIndex });
-                  }}
-                  className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 text-left"
-                  aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
+                  onClick={() =>
+                    setExpandedGalleries((current) => ({
+                      ...current,
+                      [gallery.id]: true,
+                    }))
+                  }
+                  className="mt-5 rounded-full border border-white/15 px-5 py-2 text-sm font-medium text-white transition hover:border-amber-200 hover:text-amber-200"
                 >
-                  <img
-                    src={photo.src}
-                    alt={photo.alt}
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-                  />
-                  <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
-                  <span className="absolute bottom-4 left-4 text-sm font-medium text-white">
-                    {gallery.title} · 0{photoIndex + 1}
-                  </span>
+                  Show more photos
                 </button>
-              ))}
-            </div>
-          </section>
-        ))}
+              )}
+            </section>
+          );
+        })}
       </div>
 
       {selectedGallery && activePhoto && (
