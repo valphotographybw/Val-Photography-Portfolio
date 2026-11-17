@@ -116,10 +116,10 @@ const Works = () => {
             <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
               <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
-                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-amber-300">
+                  <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B56E52]">
                     0{galleryIndex + 1} / Photography
                   </p>
-                  <h3 className="mt-2 text-3xl font-semibold text-white sm:text-4xl">
+                  <h3 className="mt-2 text-3xl font-semibold text-[#1E1E1E] sm:text-4xl">
                     {gallery.title}
                   </h3>
                 </div>
@@ -139,7 +139,7 @@ const Works = () => {
                         triggerRef.current = event.currentTarget;
                         setSelectedPhoto({ galleryId: gallery.id, photoIndex });
                       }}
-                      className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 text-left"
+                      className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-[#ECEAE5] text-left"
                       aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
                     >
                       <img
@@ -147,9 +147,8 @@ const Works = () => {
                         alt={photo.alt}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                        className="h-full w-full object-contain"
                       />
-                      <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-80 transition group-hover:opacity-100" />
                     </button>
                   );
                 })}
@@ -163,7 +162,7 @@ const Works = () => {
                       [gallery.id]: true,
                     }))
                   }
-                  className="mt-5 rounded-full border border-white/15 px-5 py-2 text-sm font-medium text-white transition hover:border-amber-200 hover:text-amber-200"
+                  className="mt-5 rounded-full border border-[#1E1E1E]/20 px-5 py-2 text-sm font-medium text-[#1E1E1E] transition hover:border-[#B56E52] hover:text-[#B56E52]"
                 >
                   More
                 </button>
@@ -186,7 +185,7 @@ const Works = () => {
             role="dialog"
             aria-modal="true"
             aria-label={`${selectedGallery.title} photo ${selectedPhoto.photoIndex + 1} of ${selectedGallery.photos.length}`}
-            className="relative z-10 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#111] shadow-2xl"
+            className="relative z-10 flex max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#1E1E1E] shadow-2xl"
           >
             <button
               ref={closeButtonRef}
@@ -197,7 +196,7 @@ const Works = () => {
             >
               <span aria-hidden="true">×</span>
             </button>
-            <div className="relative flex min-h-0 items-center justify-center bg-black">
+            <div className="relative flex min-h-0 items-center justify-center bg-[#F8F7F4]">
               <img
                 src={activePhoto.src}
                 alt={activePhoto.alt}
