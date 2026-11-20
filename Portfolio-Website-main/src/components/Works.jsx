@@ -114,7 +114,7 @@ const Works = () => {
 
           return (
             <section key={gallery.id} id={gallery.id} className="scroll-mt-28">
-              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between lg:flex-col lg:items-center lg:text-center">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B56E52]">
                     0{galleryIndex + 1} / Photography
@@ -123,7 +123,7 @@ const Works = () => {
                     {gallery.title}
                   </h3>
                 </div>
-                <p className="max-w-xl leading-7 text-secondary">
+                <p className="gallery-description max-w-xl text-lg leading-8 text-secondary lg:text-2xl lg:leading-10 lg:text-center">
                   {gallery.description}
                 </p>
               </div>
