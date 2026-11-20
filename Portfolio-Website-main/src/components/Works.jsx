@@ -139,7 +139,7 @@ const Works = () => {
                         triggerRef.current = event.currentTarget;
                         setSelectedPhoto({ galleryId: gallery.id, photoIndex });
                       }}
-                      className="group relative block aspect-[4/3] overflow-hidden rounded-2xl bg-[#ECEAE5] text-left"
+                      className="group relative block overflow-hidden rounded-2xl bg-[#ECEAE5] text-left"
                       aria-label={`View ${gallery.title} photo ${photoIndex + 1}: ${photo.alt}`}
                     >
                       <img
@@ -147,7 +147,7 @@ const Works = () => {
                         alt={photo.alt}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-contain"
+                        className="block h-auto w-full"
                       />
                     </button>
                   );
